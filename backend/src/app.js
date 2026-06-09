@@ -22,11 +22,11 @@ app.get("/", (req, res) => {
   );
 });
 
-app.use("/tareas", tareasRoutes);
+app.use("/api/tareas", tareasRoutes);
 
 // Manejo de error 404 (Ruta no encontrada)
 app.use((req, res) => {
-  res.status(404).send(error404Page());
+  res.status(404).json({mensaje: "Ruta no encontrada"});
 });
 
 // Inicio del servidor

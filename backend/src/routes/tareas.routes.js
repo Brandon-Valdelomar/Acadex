@@ -2,9 +2,7 @@ import { Router } from "express";
 import {
   listarTareas,
   verDetalleTarea,
-  mostrarFormularioNuevaTarea,
   crearTarea,
-  mostrarFormularioEditarTarea,
   actualizarTarea,
   eliminarTarea,
   mostrarResumen
@@ -13,11 +11,11 @@ import {
 const router = Router();
 
 router.get("/", listarTareas);
-router.get("/resumen", mostrarResumen); 
-router.get("/nueva", mostrarFormularioNuevaTarea);
+//router.get("/resumen", mostrarResumen); 
+router.get("/resumen",mostrarResumen)
 router.post("/nueva", crearTarea);
 router.get("/:id", verDetalleTarea);
-router.get("/:id/editar", mostrarFormularioEditarTarea);
+//router.get("/:id/editar", mostrarFormularioEditarTarea);
 router.post("/:id/editar", actualizarTarea);
 router.post("/:id/eliminar", eliminarTarea);
 
