@@ -1,35 +1,29 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import tareasRoutes from "./routes/tareas.routes.js";
+import reportesRoutes from "./routes/reportes.routes.js";
 import { loggerMiddleware } from "./middlewares/logger.middleware.js";
-import { homePage } from "./views/pages/home.page.js";
-import { error404Page } from "./views/pages/error404.page.js";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 // Middlewares globales
-app.use(express.urlencoded({ extended: true }));
-app.use(loggerMiddleware);
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(loggerMiddleware)
 
-// Rutas principales
-app.get("/", (req, res) => {
-  res.send(
-    homePage(
-      process.env.APP_NAME,
-      process.env.APP_VERSION
-    )
-  );
-});
+// Rutas
+app.use("/api/tareas",    tareasRoutes)
+app.use("/api/reportes",  reportesRoutes)
 
-app.use("/api/tareas", tareasRoutes);
-
-// Manejo de error 404 (Ruta no encontrada)
+// 404
 app.use((req, res) => {
-  res.status(404).json({mensaje: "Ruta no encontrada"});
-});
+  res.status(404).json({ mensaje: "Ruta no encontrada" })
+})
 
-// Inicio del servidor
+// Inicio
 app.listen(PORT, () => {
-  console.log(`${process.env.APP_NAME} ejecutándose en http://localhost:${PORT}`);
-});
+  console.log(`Servidor corriendo en http://localhost:${PORT}`)
+})

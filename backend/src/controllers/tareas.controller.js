@@ -1,42 +1,39 @@
 import { tareas } from "../data/tareas.data.js";
 
-
-
 export function listarTareas(req, res) {
-  const estado = req.query.estado;
-  const mensaje = req.query.mensaje; 
+  const { estado, titulo } = req.query;
 
+  let resultado = tareas;
+
+  // Filtrar por estado
   if (estado) {
-    const tareasFiltradas = tareas.filter(tarea => tarea.estado === estado);
-    return res.json(tareasFiltradas);
+    resultado = resultado.filter(t => t.estado === estado);
   }
 
-  res.json(tareas);
-}
+  // Búsqueda por título (reto adicional)
+  if (titulo) {
+    const busqueda = titulo.toLowerCase();
+    resultado = resultado.filter(t => t.titulo.toLowerCase().includes(busqueda));
+  }
 
+  res.json(resultado);
+}
 
 export function verDetalleTarea(req, res) {
   const id = Number(req.params.id);
   const tarea = tareas.find(tarea => tarea.id === id);
 
   if (!tarea) {
-    return res.json({error: "Tarea no encontrada"});
+    return res.json({ error: "Tarea no encontrada" });
   }
 
-  res.status(200).send(tarea);
+  res.status(200).json(tarea);
 }
-
-
-//export function mostrarFormularioNuevaTarea(req, res) {
- // res.send(nuevaTareaPage());
-//}
-
 
 export function crearTarea(req, res) {
   const { titulo, descripcion, estado, prioridad } = req.body;
   const errores = {};
 
-  
   if (!titulo || titulo.trim() === "") {
     errores.titulo = "El título es obligatorio y no puede estar vacío.";
   }
@@ -44,9 +41,8 @@ export function crearTarea(req, res) {
     errores.descripcion = "La descripción debe tener al menos 10 caracteres.";
   }
 
-
   if (Object.keys(errores).length > 0) {
-    return res.send((errores, { titulo, descripcion, estado, prioridad }));
+    return res.status(400).json({ errores });
   }
 
   const nuevaTarea = {
@@ -58,38 +54,24 @@ export function crearTarea(req, res) {
   };
 
   tareas.push(nuevaTarea);
-  res.status(200).json({mensaje: "Tarea creada exitosamente"});
+  res.status(201).json(nuevaTarea);
 }
-
-
-//export function mostrarFormularioEditarTarea(req, res) {
-  //const id = Number(req.params.id);
- // const tarea = tareas.find(tarea => tarea.id === id);
-
-  //if (!tarea) {
-    //return res.status(404).send(error404Page());
-  //}
-
-  //res.send(editarTareaPage(tarea));
-//}
-
 
 export function actualizarTarea(req, res) {
   const id = Number(req.params.id);
   const tarea = tareas.find(tarea => tarea.id === id);
 
   if (!tarea) {
-    return res.json({mensaje: "Tarea no encontrada"});
+    return res.json({ mensaje: "Tarea no encontrada" });
   }
 
-  tarea.titulo = req.body.titulo;
+  tarea.titulo      = req.body.titulo;
   tarea.descripcion = req.body.descripcion;
-  tarea.estado = req.body.estado;
-  tarea.prioridad = req.body.prioridad;
+  tarea.estado      = req.body.estado;
+  tarea.prioridad   = req.body.prioridad;
 
-  res.status(200).json({mensaje: "Tarea actualizada exitosamente"});
+  res.status(200).json(tarea);
 }
-
 
 export function eliminarTarea(req, res) {
   const id = Number(req.params.id);
@@ -99,16 +81,18 @@ export function eliminarTarea(req, res) {
     tareas.splice(indice, 1);
   }
 
-  res.status(200).json({mensaje: "Tarea eliminada"});
+  res.status(200).json({ mensaje: "Tarea eliminada" });
 }
-
 
 export function mostrarResumen(req, res) {
   const resumen = {
-    total: tareas.length,
-    completadas: tareas.filter(tarea => tarea.estado === "completada").length,
-    pendientes: tareas.filter(tarea => tarea.estado === "pendiente").length,
-    en_progreso: tareas.filter(tarea => tarea.estado === "en progreso").length
+    total:       tareas.length,
+    completadas: tareas.filter(t => t.estado === "completada").length,
+    pendientes:  tareas.filter(t => t.estado === "pendiente").length,
+    en_progreso: tareas.filter(t => t.estado === "en progreso").length,
+    alta:        tareas.filter(t => t.prioridad === "alta").length,
+    media:       tareas.filter(t => t.prioridad === "media").length,
+    baja:        tareas.filter(t => t.prioridad === "baja").length,
   };
   res.status(200).json(resumen);
 }

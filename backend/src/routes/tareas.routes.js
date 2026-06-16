@@ -10,13 +10,11 @@ import {
 
 const router = Router();
 
-router.get("/", listarTareas);
-//router.get("/resumen", mostrarResumen); 
-router.get("/resumen",mostrarResumen)
-router.post("/nueva", crearTarea);
-router.get("/:id", verDetalleTarea);
-//router.get("/:id/editar", mostrarFormularioEditarTarea);
-router.post("/:id/editar", actualizarTarea);
-router.post("/:id/eliminar", eliminarTarea);
+router.get("/",          listarTareas);
+router.get("/resumen",   mostrarResumen);
+router.get("/:id",       verDetalleTarea);
+router.post("/",         crearTarea);
+router.put("/:id",       actualizarTarea);
+router.delete("/:id",    eliminarTarea);
 
 export default router;
