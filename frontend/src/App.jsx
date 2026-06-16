@@ -1,31 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Routes, Route } from 'react-router-dom'
+import MainLayout from './layouts/MainLayout'
+import HomePage from './pages/HomePage'
+import TareasPage from './pages/TareasPage'
+import TareaFormPage from './pages/TareaFormPage'
+import DetalleTareaPage from './pages/DetalleTareaPage'
+import DashboardPage from './pages/DashboardPage'
+import Error404Page from './pages/Error404Page'
 
 function App() {
- 
-
   return (
-    <div className="p-5 mb-4 bg-white rounded-3 shadow-sm">
-  <h1 className="display-5 fw-bold">
-    ${"{"}appName{"}"}
-  </h1>
-  <p className="fs-5">
-    Aplicación web para administrar tareas académicas utilizando Node.js,
-    Express y Bootstrap.
-  </p>
-  <p className="text-muted">
-    Versión: ${"{"}appVersion{"}"}
-  </p>
-  <a href="/tareas" className="btn btn-primary">
-    Ver tareas
-  </a>
-  <a href="/tareas/nueva" className="btn btn-outline-primary">
-    Crear tarea
-  </a>
-</div>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/"                  element={<HomePage />} />
+        <Route path="/tareas"            element={<TareasPage />} />
+        <Route path="/tareas/nueva"      element={<TareaFormPage />} />
+        <Route path="/tareas/:id"        element={<DetalleTareaPage />} />
+        <Route path="/editar-tarea/:id"  element={<TareaFormPage />} />
+        <Route path="/dashboard"         element={<DashboardPage />} />
+        <Route path="*"                  element={<Error404Page />} />
+      </Route>
+    </Routes>
   )
 }
 
